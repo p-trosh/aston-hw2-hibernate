@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Подробная информация о работнике</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body>
+    <div th:replace="index :: navBar"></div>
+    <div class="department">
+        <table>
+            <tr>
+                <th>Номер</th>
+                <th>Имя</th>
+                <th>Фамилия</th>
+                <th>Специальность</th>
+                <th>Отдел</th>
+                <th></th>
+                <th></th>
+            </tr>
+            <tr>
+                <td th:text="${worker.getId()}"></td>
+                <td th:text="${worker.getFirstName()}"></td>
+                <td th:text="${worker.getLastName()}"></td>
+                <td th:text="${worker.getSpeciality().getName()}"></td>
+                <td th:text="${worker.getDepartment().getName()}"></td>
+                <td><a th:href="@{/worker/edit/{id}(id=${worker.getId()})}">Редактировать</a></td>
+                <td><form th:action="@{/worker/delete/{id}(id=${worker.getId()})}" th:method="delete" >
+                    <input type="hidden" name="_method" value="delete" />
+                    <button type="submit" class="btn">
+                        Удалить
+                    </button>
+                </form></td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>

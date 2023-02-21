@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Главная страница</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body>
+<div class="navBar" th:fragment="navBar">
+    <div class ="link">
+        <a th:href="@{/department}">Отделы</a>
+    </div>
+    <div class ="link">
+        <a th:href="@{/worker}">Рабочие</a>
+    </div>
+    <div class ="link">
+        <a th:href="@{/speciality}">Специальности</a>
+    </div>
+    <div class ="link">
+        <a th:href="@{/task}">Задания</a>
+    </div>
+</div>
+</body>
+</html>

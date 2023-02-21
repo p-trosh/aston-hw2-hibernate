@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Список работников</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body>
+<div th:replace="index :: navBar"></div>
+<div>
+    <a th:href="@{/worker/create}">Создать работника</a>
+</div>
+
+<div th:if="${workers.size() > 0}">
+    <div class="department">
+        <table>
+            <caption>Список работников</caption>
+            <tr>
+                <th>Номер</th>
+                <th>Имя</th>
+                <th>Фамилия</th>
+                <th>Специальность</th>
+                <th>Отдел</th>
+                <th></th>
+            </tr>
+            <tr th:each="record : ${workers}">
+                <td th:text="${record.getId()}"></td>
+                <td th:text="${record.getFirstName()}"></td>
+                <td th:text="${record.getLastName()}"></td>
+                <td th:text="${record.getSpeciality().getName()}"></td>
+                <td th:text="${record.getDepartment().getName()}"></td>
+                <td><a th:href="@{/worker/view/{id}(id=${record.getId()})}">Подробная информация</a></td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+</body>
+</html>

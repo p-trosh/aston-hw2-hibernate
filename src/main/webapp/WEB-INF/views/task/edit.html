@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Редактирование задания</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body>
+<div th:if="${task == null}">
+    <form method="post">
+
+        <label>Название</label>
+        <input type="text" name="title" required="required"><br>
+        <label>Описание</label>
+        <input type="text" name="description" required="required"><br>
+        <label>Отдел</label>
+        <select class="form-control" name="departmentId" required="required">
+            <option th:each="department : ${departments}"
+                    th:value="${department.getId()}"
+                    th:text="${department.getName()}">
+            </option>
+        </select>
+        <p>
+            <button type="submit" class="btn">Создать запись</button>
+        </p>
+    </form>
+</div>
+<div th:if="${task != null}">
+    <form th:action="@{/task/edit}" th:method="put">
+        <input type="hidden" name="id"  th:value="${task.getId()}" />
+        <input type="hidden" name="_method" value="put" />
+        <label>Название</label>
+        <input type="text" name="title" required="required" th:value="${task.getTitle()}"><br>
+        <label>Описание</label>
+        <input type="text" name="description" required="required" th:value="${task.getDescription()}"><br>
+        <select class="form-control" name="departmentId" required="required">
+            <option th:each="department : ${departments}"
+                    th:value="${department.getId()}"
+                    th:text="${department.getName()}"
+                    th:selected="${task.getDepartment().getId() == department.getId()}">
+            </option>
+        </select>
+        <p>
+            <button type="submit" class="btn">Создать запись</button>
+        </p>
+    </form>
+</div>
+</body>
+</html>

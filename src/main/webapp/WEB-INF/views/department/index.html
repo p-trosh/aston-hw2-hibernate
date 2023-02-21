@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Список отделов</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body>
+<div th:replace="index :: navBar"></div>
+<div>
+    <a th:href="@{/department/create}">Создать отдел</a>
+</div>
+
+<div th:if="${departments.size() > 0}">
+    <div class="department">
+        <table>
+            <caption>Список отделов</caption>
+            <tr>
+                <th>Номер</th>
+                <th>Имя</th>
+                <th>Подробная информация</th>
+            </tr>
+            <tr th:each="record : ${departments}">
+                <td th:text="${record.getId()}"></td>
+                <td th:text="${record.getName()}"></td>
+                <td><a th:href="@{/department/view/{id}(id=${record.getId()})}">Полная информация</a></td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+</body>
+</html>

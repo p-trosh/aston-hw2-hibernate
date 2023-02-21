@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Редактирование задания</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body>
+<div th:if="${worker == null}">
+    <form method="post">
+        <label>Имя</label>
+        <input type="text" name="firstName" required="required" ><br>
+        <label>Фамилия</label>
+        <input type="text" name="lastName" required="required"><br>
+        <label>Отдел</label>
+        <select class="form-control" name="departmentId" required="required">
+            <option th:each="department : ${departments}"
+                    th:value="${department.getId()}"
+                    th:text="${department.getName()}">
+            </option>
+        </select><br>
+        <label>Специальность</label>
+        <select class="form-control" name="specialityId" required="required">
+            <option th:each="speciality : ${specialities}"
+                    th:value="${speciality.getId()}"
+                    th:text="${speciality.getName()}">
+            </option>
+        </select>
+        <p>
+            <button type="submit" class="btn">Создать запись</button>
+        </p>
+    </form>
+</div>
+<div th:if="${worker != null}">
+    <form th:action="@{/worker/edit}" th:method="put">
+        <input type="hidden" name="id"  th:value="${worker.getId()}" />
+        <input type="hidden" name="_method" value="put" />
+        <label>Имя</label>
+        <input type="text" name="firstName" required="required" th:value="${worker.getFirstName()}"><br>
+        <label>Фамилия</label>
+        <input type="text" name="lastName" required="required" th:value="${worker.getLastName()}"><br>
+        <select class="form-control" name="departmentId" required="required">
+            <option th:each="department : ${departments}"
+                    th:value="${department.getId()}"
+                    th:text="${department.getName()}"
+                    th:selected="${worker.getDepartment().getId() == department.getId()}">
+            </option>
+        </select>
+        <select class="form-control" name="specialityId" required="required">
+            <option th:each="speciality : ${specialities}"
+                    th:value="${speciality.getId()}"
+                    th:text="${speciality.getName()}"
+                    th:selected="${worker.getSpeciality().getId() == speciality.getId()}">
+            </option>
+        </select>
+        <p>
+            <button type="submit" class="btn">Создать запись</button>
+        </p>
+    </form>
+</div>
+</body>
+</html>

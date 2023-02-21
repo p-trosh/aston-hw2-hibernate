@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Список специальностей</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body>
+<div th:replace="index :: navBar"></div>
+<div>
+    <a th:href="@{/speciality/create}">Создать специальность</a>
+</div>
+<div th:if="${specialities.size() > 0}">
+    <div class="department">
+        <table>
+            <caption>Список специальностей</caption>
+            <tr>
+                <th>Номер</th>
+                <th>Название</th>
+                <th></th>
+                <th></th>
+            </tr>
+            <tr th:each="record : ${specialities}">
+                <td th:text="${record.getId()}"></td>
+                <td th:text="${record.getName()}"></td>
+                <td><a th:href="@{/speciality/edit/{id}(id=${record.getId()})}">Редактировать</a></td>
+                <td><form th:action="@{/speciality/delete/{id}(id=${record.getId()})}" th:method="delete" >
+                    <input type="hidden" name="_method" value="delete" />
+                    <button type="submit" class="btn">
+                        Удалить
+                    </button>
+                </form></td>
+
+            </tr>
+        </table>
+    </div>
+</div>
+
+</body>
+</html>
