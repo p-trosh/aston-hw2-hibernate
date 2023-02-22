@@ -2,7 +2,7 @@ package ru.trosh.astontrainee.dao;
 
 import org.springframework.stereotype.Component;
 import ru.trosh.astontrainee.config.JDBCConnectionManager;
-import ru.trosh.astontrainee.model.Speciality;
+import ru.trosh.astontrainee.domain.Speciality;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

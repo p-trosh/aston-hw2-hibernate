@@ -1,18 +1,13 @@
 package ru.trosh.astontrainee.controller;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.trosh.astontrainee.dao.DepartmentDAO;
 import ru.trosh.astontrainee.dao.TaskDAO;
-import ru.trosh.astontrainee.model.Department;
-import ru.trosh.astontrainee.model.Task;
-
-import java.time.LocalDate;
+import ru.trosh.astontrainee.domain.Department;
+import ru.trosh.astontrainee.domain.Task;
 
 @Controller
 @RequestMapping("/task")
@@ -80,12 +75,27 @@ public class TaskController {
         return "redirect:/task";
     }
 
-    @Getter
-    @Setter
+
     public static class TaskForm {
         private Long id;
         private String title;
         private String description;
         private Long departmentId;
+
+        public Long getId() {
+            return id;
+        }
+
+        public String getTitle() {
+            return title;
+        }
+
+        public String getDescription() {
+            return description;
+        }
+
+        public Long getDepartmentId() {
+            return departmentId;
+        }
     }
 }

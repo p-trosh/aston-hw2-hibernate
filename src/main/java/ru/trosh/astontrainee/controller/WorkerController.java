@@ -1,7 +1,5 @@
 package ru.trosh.astontrainee.controller;
 
-import lombok.Getter;
-import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -9,10 +7,9 @@ import org.springframework.web.bind.annotation.*;
 import ru.trosh.astontrainee.dao.DepartmentDAO;
 import ru.trosh.astontrainee.dao.SpecialityDAO;
 import ru.trosh.astontrainee.dao.WorkerDAO;
-import ru.trosh.astontrainee.model.Department;
-import ru.trosh.astontrainee.model.Speciality;
-import ru.trosh.astontrainee.model.Task;
-import ru.trosh.astontrainee.model.Worker;
+import ru.trosh.astontrainee.domain.Department;
+import ru.trosh.astontrainee.domain.Speciality;
+import ru.trosh.astontrainee.domain.Worker;
 
 @Controller
 @RequestMapping("/worker")
@@ -91,14 +88,32 @@ public class WorkerController {
         return "redirect:/worker";
     }
 
-    @Getter
-    @Setter
     public static class WorkerForm {
         private Long id;
         private String firstName;
         private String lastName;
         private Long departmentId;
         private Long specialityId;
+
+        public Long getId() {
+            return id;
+        }
+
+        public String getFirstName() {
+            return firstName;
+        }
+
+        public String getLastName() {
+            return lastName;
+        }
+
+        public Long getDepartmentId() {
+            return departmentId;
+        }
+
+        public Long getSpecialityId() {
+            return specialityId;
+        }
     }
 
 

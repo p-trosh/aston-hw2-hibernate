@@ -5,7 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.trosh.astontrainee.dao.DepartmentDAO;
-import ru.trosh.astontrainee.model.Department;
+import ru.trosh.astontrainee.domain.Department;
 
 @Controller
 @RequestMapping("/department")

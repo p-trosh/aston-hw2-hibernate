@@ -2,9 +2,9 @@ package ru.trosh.astontrainee.dao;
 
 import org.springframework.stereotype.Component;
 import ru.trosh.astontrainee.config.JDBCConnectionManager;
-import ru.trosh.astontrainee.model.Department;
-import ru.trosh.astontrainee.model.Speciality;
-import ru.trosh.astontrainee.model.Worker;
+import ru.trosh.astontrainee.domain.Department;
+import ru.trosh.astontrainee.domain.Speciality;
+import ru.trosh.astontrainee.domain.Worker;
 
 import java.sql.*;
 import java.util.ArrayList;

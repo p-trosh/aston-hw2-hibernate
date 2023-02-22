@@ -5,7 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.trosh.astontrainee.dao.SpecialityDAO;
-import ru.trosh.astontrainee.model.Speciality;
+import ru.trosh.astontrainee.domain.Speciality;
 
 @Controller
 @RequestMapping("/speciality")
