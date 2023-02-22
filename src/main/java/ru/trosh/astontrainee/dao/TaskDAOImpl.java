@@ -5,10 +5,7 @@ import ru.trosh.astontrainee.config.JDBCConnectionManager;
 import ru.trosh.astontrainee.domain.Department;
 import ru.trosh.astontrainee.domain.Task;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,34 +26,58 @@ public class TaskDAOImpl implements TaskDAO{
                     " FROM task" +
             " LEFT JOIN department ON department.id = task.department;";
 
-    public void create(Task task) {
-        execute(CREATE_TASK, task.getTitle(), task.getDescription(), task.getDepartment().getId());
+    @Override
+    public Task create(Task task) {
+        Long createdId = execute(CREATE_TASK, task.getTitle(), task.getDescription(), task.getDepartment().getId());
+        return selectById(createdId);
     }
 
+    @Override
     public Task selectById(Long id) {
         return query(SELECT_TASK, id).get(0);
     }
 
+    @Override
     public List<Task> selectAll() {
         return query(SELECT_ALL_TASKS);
     }
 
-    public void update(Task task) {
-        execute(UPDATE_TASK, task.getTitle(), task.getDescription(), task.getDepartment().getId(), task.getId());
+    @Override
+    public Task update(Task task) {
+        Long updatedId = execute(
+                UPDATE_TASK,
+                task.getTitle(),
+                task.getDescription(),
+                task.getDepartment().getId(),
+                task.getId());
+        return selectById(updatedId);
     }
 
+    @Override
     public void delete(Long id) {
         execute(DELETE_TASK, id);
 
     }
 
-    private int execute(final String sql, final Object... values) {
+    private Long execute(final String sql, final Object... values) {
+        long id = 0;
         try (Connection connection = JDBCConnectionManager.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
+             PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             for (int i = 0; i < values.length; i++) {
                 statement.setObject(i + 1, values[i]);
             }
-            return statement.executeUpdate();
+            int affectedRows = statement.executeUpdate();
+            if (affectedRows == 0) {
+                throw new SQLException("No rows affected.");
+            }
+            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    id = generatedKeys.getLong(1);
+                } else {
+                    throw new SQLException("No ID obtained.");
+                }
+            }
+            return id;
         } catch (SQLException e) {
             throw new IllegalStateException(e);
         }

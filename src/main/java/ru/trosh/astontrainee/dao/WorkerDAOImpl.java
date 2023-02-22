@@ -33,12 +33,13 @@ public class WorkerDAOImpl implements WorkerDAO{
     private static final String UPDATE_WORKER =
             "UPDATE worker SET first_name = ?, last_name = ?, speciality = ?, department = ? WHERE id = ? ;";
 
-    public void create(Worker worker) {
-        execute(CREATE_WORKER,
+    public Worker create(Worker worker) {
+        Long createId = execute(CREATE_WORKER,
                 worker.getFirstName(),
                 worker.getLastName(),
                 worker.getSpeciality().getId(),
                 worker.getDepartment().getId());
+        return selectById(createId);
     }
 
     public List<Worker> selectAll() {
@@ -53,23 +54,36 @@ public class WorkerDAOImpl implements WorkerDAO{
         execute(DELETE_WORKER, id);
     }
 
-    public void update(Worker worker) {
-        execute(
+    public Worker update(Worker worker) {
+        Long updatedId = execute(
                 UPDATE_WORKER,
                 worker.getFirstName(),
                 worker.getLastName(),
                 worker.getSpeciality().getId(),
                 worker.getDepartment().getId(),
                 worker.getId());
+        return selectById(updatedId);
     }
 
-    private int execute(final String sql, final Object... values) {
+    private Long execute(final String sql, final Object... values) {
+        long id = 0;
         try (Connection connection = JDBCConnectionManager.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
+             PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             for (int i = 0; i < values.length; i++) {
                 statement.setObject(i + 1, values[i]);
             }
-            return statement.executeUpdate();
+            int affectedRows = statement.executeUpdate();
+            if (affectedRows == 0) {
+                throw new SQLException("No rows affected.");
+            }
+            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    id = generatedKeys.getLong(1);
+                } else {
+                    throw new SQLException("No ID obtained.");
+                }
+            }
+            return id;
         } catch (SQLException e) {
             throw new IllegalStateException(e);
         }

@@ -4,13 +4,13 @@ import java.util.List;
 
 public interface CrudOperations<T, I> {
 
-    void create(T entity);
+    T create(T entity);
 
     T selectById(I id);
 
     List<T> selectAll();
 
-    void update(T entity);
+    T update(T entity);
 
     void delete(I id);
 }
