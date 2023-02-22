@@ -6,6 +6,11 @@ public class DepartmentShortResponse {
 
     private String name;
 
+    public DepartmentShortResponse(Long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
     public Long getId() {
         return id;
     }

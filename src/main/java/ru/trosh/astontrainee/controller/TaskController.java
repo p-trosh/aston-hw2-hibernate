@@ -4,98 +4,63 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import ru.trosh.astontrainee.dao.DepartmentDAO;
-import ru.trosh.astontrainee.dao.TaskDAO;
-import ru.trosh.astontrainee.domain.Department;
-import ru.trosh.astontrainee.domain.Task;
+import ru.trosh.astontrainee.model.task.TaskRequest;
+import ru.trosh.astontrainee.service.DepartmentService;
+import ru.trosh.astontrainee.service.TaskService;
 
 @Controller
 @RequestMapping("/task")
 public class TaskController {
 
     @Autowired
-    private TaskDAO dao;
+    private TaskService taskService;
 
     @Autowired
-    private DepartmentDAO departmentDAO;
+    private DepartmentService departmentService;
 
     @GetMapping()
     public String tasks(Model model) {
-        model.addAttribute("tasks", dao.selectAll());
+        model.addAttribute("tasks", taskService.selectAll());
         return "task/index";
     }
 
     @GetMapping("view/{id}")
     public String task(@PathVariable long id, Model model) {
-        model.addAttribute("task", dao.selectById(id));
+        model.addAttribute("task", taskService.selectById(id));
         return "task/view";
     }
 
     @DeleteMapping("delete/{id}")
     public String deleteTask(@PathVariable long id, Model model) {
-        dao.delete(id);
+        taskService.delete(id);
         return "redirect:/task";
     }
 
     @GetMapping("create")
     public String createTask(Model model) {
-        model.addAttribute("departments", departmentDAO.selectAll());
+        model.addAttribute("departments", departmentService.selectAll());
         return "task/edit";
     }
 
     @GetMapping("edit/{id}")
     public String editTask(@PathVariable long id, Model model) {
-        model.addAttribute("departments", departmentDAO.selectAll());
-        model.addAttribute("task", dao.selectById(id));
+        model.addAttribute("departments", departmentService.selectAll());
+        model.addAttribute("task", taskService.selectById(id));
         return "task/edit";
     }
 
-    @PutMapping("edit")
-    public String editTask(@ModelAttribute final TaskForm task, Model model) {
-        dao.update(Task.builder()
-                .id(task.getId())
-                .title(task.getTitle())
-                .description(task.getDescription())
-                .department(Department.builder()
-                        .id(task.getDepartmentId())
-                        .build())
-                .build());
+    @PutMapping("edit/{id}")
+    public String editTask(
+            @PathVariable long id,
+            @ModelAttribute final TaskRequest task,
+            Model model) {
+        taskService.update(id, task);
         return "redirect:/task";
     }
 
     @PostMapping("create")
-    public String createTask(@ModelAttribute final TaskForm task, Model model) {
-        dao.create(Task.builder()
-                .title(task.getTitle())
-                .description(task.getDescription())
-                .department(Department.builder()
-                        .id(task.getDepartmentId())
-                        .build())
-                .build());
+    public String createTask(@ModelAttribute final TaskRequest task, Model model) {
+        taskService.create(task);
         return "redirect:/task";
-    }
-
-
-    public static class TaskForm {
-        private Long id;
-        private String title;
-        private String description;
-        private Long departmentId;
-
-        public Long getId() {
-            return id;
-        }
-
-        public String getTitle() {
-            return title;
-        }
-
-        public String getDescription() {
-            return description;
-        }
-
-        public Long getDepartmentId() {
-            return departmentId;
-        }
     }
 }

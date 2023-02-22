@@ -17,8 +17,7 @@
     </form>
 </div>
 <div th:if="${department != null}">
-    <form th:action="@{/department/edit}" th:method="put">
-        <input type="hidden" name="id"  th:value="${department.getId()}" />
+    <form th:action="@{/department/edit/{id}(id=${department.getId()})}" th:method="put">
         <input type="hidden" name="_method" value="put" />
         <label>Название</label>
         <input type="text" name="name" required="required" th:value="${department.getName()}"><br>

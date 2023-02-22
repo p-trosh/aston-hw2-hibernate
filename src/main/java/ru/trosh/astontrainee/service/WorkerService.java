@@ -12,7 +12,7 @@ public interface WorkerService {
 
     WorkerFullResponse selectById(Long id);
 
-    Long create(WorkerRequest request);
+    WorkerFullResponse create(WorkerRequest request);
 
     WorkerFullResponse update(Long id, WorkerRequest request);
 

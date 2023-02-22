@@ -32,8 +32,7 @@
     </form>
 </div>
 <div th:if="${worker != null}">
-    <form th:action="@{/worker/edit}" th:method="put">
-        <input type="hidden" name="id"  th:value="${worker.getId()}" />
+    <form th:action="@{/worker/edit/{id}(id=${worker.getId()})}" th:method="put">
         <input type="hidden" name="_method" value="put" />
         <label>Имя</label>
         <input type="text" name="firstName" required="required" th:value="${worker.getFirstName()}"><br>

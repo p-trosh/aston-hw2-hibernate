@@ -4,18 +4,29 @@ public class TaskShortResponse {
     private Long id;
     private String title;
     private String description;
+    private String departmentName;
 
+    public TaskShortResponse(Long id, String title, String description, String departmentName) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.departmentName = departmentName;
+    }
 
     public Long getId() {
-        return this.id;
+        return id;
     }
 
     public String getTitle() {
-        return this.title;
+        return title;
     }
 
     public String getDescription() {
-        return this.description;
+        return description;
+    }
+
+    public String getDepartmentName() {
+        return departmentName;
     }
 
     public void setId(Long id) {
@@ -28,5 +39,9 @@ public class TaskShortResponse {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public void setDepartmentName(String departmentName) {
+        this.departmentName = departmentName;
     }
 }

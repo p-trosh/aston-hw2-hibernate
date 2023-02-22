@@ -12,7 +12,7 @@ public interface DepartmentService {
 
     DepartmentFullResponse selectById(Long id);
 
-    Long create(DepartmentRequest request);
+    DepartmentFullResponse create(DepartmentRequest request);
 
     DepartmentFullResponse update(Long id, DepartmentRequest request);
 

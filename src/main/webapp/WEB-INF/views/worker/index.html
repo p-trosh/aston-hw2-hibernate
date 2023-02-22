@@ -27,8 +27,8 @@
                 <td th:text="${record.getId()}"></td>
                 <td th:text="${record.getFirstName()}"></td>
                 <td th:text="${record.getLastName()}"></td>
-                <td th:text="${record.getSpeciality().getName()}"></td>
-                <td th:text="${record.getDepartment().getName()}"></td>
+                <td th:text="${record.getSpecialityName()}"></td>
+                <td th:text="${record.getDepartmentName()}"></td>
                 <td><a th:href="@{/worker/view/{id}(id=${record.getId()})}">Подробная информация</a></td>
             </tr>
         </table>

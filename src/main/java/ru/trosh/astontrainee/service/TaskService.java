@@ -12,7 +12,7 @@ public interface TaskService {
 
     TaskFullResponse selectById(Long id);
 
-    Long create(TaskRequest request);
+    TaskFullResponse create(TaskRequest request);
 
     TaskFullResponse update(Long id, TaskRequest request);
 

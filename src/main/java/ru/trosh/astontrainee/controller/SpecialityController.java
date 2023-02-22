@@ -4,25 +4,25 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import ru.trosh.astontrainee.dao.SpecialityDAO;
-import ru.trosh.astontrainee.domain.Speciality;
+import ru.trosh.astontrainee.model.speciality.SpecialityRequest;
+import ru.trosh.astontrainee.service.SpecialityService;
 
 @Controller
 @RequestMapping("/speciality")
 public class SpecialityController {
 
     @Autowired
-    private SpecialityDAO dao;
+    private SpecialityService specialityService;
 
     @GetMapping()
     public String specialities(Model model) {
-        model.addAttribute("specialities", dao.selectAll());
+        model.addAttribute("specialities", specialityService.selectAll());
         return "speciality/index";
     }
 
     @DeleteMapping("delete/{id}")
     public String deleteSpeciality(@PathVariable long id) {
-        dao.delete(id);
+        specialityService.delete(id);
         return "redirect:/speciality";
     }
 
@@ -33,19 +33,22 @@ public class SpecialityController {
 
     @GetMapping("edit/{id}")
     public String editSpeciality(@PathVariable long id, Model model) {
-        model.addAttribute("speciality", dao.selectById(id));
+        model.addAttribute("speciality", specialityService.selectById(id));
         return "speciality/edit";
     }
 
-    @PutMapping("edit")
-    public String editSpeciality(@ModelAttribute final Speciality speciality, Model model) {
-        dao.update(speciality);
+    @PutMapping("edit/{id}")
+    public String editSpeciality(
+            @PathVariable long id,
+            @ModelAttribute final SpecialityRequest speciality,
+            Model model) {
+        specialityService.update(id, speciality);
         return "redirect:/speciality";
     }
 
     @PostMapping("create")
-    public String createSpeciality(@ModelAttribute final Speciality speciality, Model model) {
-        dao.create(speciality);
+    public String createSpeciality(@ModelAttribute final SpecialityRequest speciality, Model model) {
+        specialityService.create(speciality);
         return "redirect:/speciality";
     }
 

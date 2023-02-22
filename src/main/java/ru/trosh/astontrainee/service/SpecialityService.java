@@ -12,7 +12,7 @@ public interface SpecialityService {
 
     SpecialityFullResponse selectById(Long id);
 
-    Long create(SpecialityRequest request);
+    SpecialityFullResponse create(SpecialityRequest request);
 
     SpecialityFullResponse update(Long id, SpecialityRequest request);
 
