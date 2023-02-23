@@ -42,7 +42,7 @@ public class WorkerServiceImpl implements WorkerService{
         findOrThrow(id);
         Worker worker = workerMapper.map(request);
         worker.setId(id);
-        return workerMapper.map(worker);
+        return workerMapper.map(workerDAO.update(worker));
     }
 
     @Override

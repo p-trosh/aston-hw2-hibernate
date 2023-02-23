@@ -2,6 +2,7 @@ package ru.trosh.astontrainee.dao;
 
 import org.springframework.stereotype.Component;
 import ru.trosh.astontrainee.config.JDBCConnectionManager;
+import ru.trosh.astontrainee.domain.Department;
 import ru.trosh.astontrainee.domain.Speciality;
 import ru.trosh.astontrainee.domain.Worker;
 
@@ -116,6 +117,8 @@ public class SpecialityDAOImpl implements SpecialityDAO {
                             .id(workerId)
                             .firstName(resultSet.getString("w_first_name"))
                             .lastName(resultSet.getString("w_last_name"))
+                            .speciality(new Speciality())
+                            .department(new Department())
                             .build());
                 }
             } while (resultSet.next());
