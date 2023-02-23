@@ -50,6 +50,17 @@ public class TaskServiceImpl implements TaskService{
         taskDAO.delete(id);
     }
 
+    @Override
+    public void addTaskToWorker(Long taskId, Long workerId) {
+        taskDAO.addTaskToWorker(taskId, workerId);
+    }
+
+    @Override
+    public void deleteTaskFromWorker(Long taskId, Long workerId) {
+        taskDAO.deleteTaskFromWorker(taskId, workerId);
+    }
+
+
     private Task findOrThrow(Long id) {
         return Optional.ofNullable(taskDAO.selectById(id))
                 .orElseThrow(() -> new IllegalStateException("Task not found"));

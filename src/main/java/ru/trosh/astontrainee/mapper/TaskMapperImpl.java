@@ -7,6 +7,7 @@ import ru.trosh.astontrainee.model.department.DepartmentShortResponse;
 import ru.trosh.astontrainee.model.task.TaskFullResponse;
 import ru.trosh.astontrainee.model.task.TaskRequest;
 import ru.trosh.astontrainee.model.task.TaskShortResponse;
+import ru.trosh.astontrainee.model.worker.WorkerShortResponse;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,6 +31,13 @@ public class TaskMapperImpl implements TaskMapper{
                 .department(new DepartmentShortResponse(
                         task.getDepartment().getId(),
                         task.getDepartment().getName()))
+                .workers(task.getWorkers().stream()
+                        .map(worker -> WorkerShortResponse.builder()
+                                .id(worker.getId())
+                                .firstName(worker.getFirstName())
+                                .lastName(worker.getLastName())
+                                .build())
+                        .collect(Collectors.toList()))
                 .build();
     }
 

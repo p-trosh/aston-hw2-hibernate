@@ -34,5 +34,23 @@
             </tr>
         </table>
     </div>
+
+    <div th:if="${worker.getTasks().size() > 0}">
+        <div class="department">
+            <table>
+                <caption>Задания</caption>
+                <tr>
+                    <th>Номер</th>
+                    <th>Название</th>
+                    <th>Подробная информация</th>
+                </tr>
+                <tr th:each="record : ${worker.getTasks()}">
+                    <td th:text="${record.getId()}"></td>
+                    <td th:text="${record.getTitle()}"></td>
+                    <td><a th:href="@{/task/view/{id}(id=${record.getId()})}">Полная информация</a></td>
+                </tr>
+            </table>
+        </div>
+    </div>
 </body>
 </html>

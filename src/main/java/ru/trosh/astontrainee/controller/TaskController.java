@@ -4,9 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import ru.trosh.astontrainee.model.task.TaskFullResponse;
 import ru.trosh.astontrainee.model.task.TaskRequest;
 import ru.trosh.astontrainee.service.DepartmentService;
 import ru.trosh.astontrainee.service.TaskService;
+import ru.trosh.astontrainee.service.WorkerService;
 
 @Controller
 @RequestMapping("/task")
@@ -14,6 +16,9 @@ public class TaskController {
 
     @Autowired
     private TaskService taskService;
+
+    @Autowired
+    private WorkerService workerService;
 
     @Autowired
     private DepartmentService departmentService;
@@ -26,7 +31,9 @@ public class TaskController {
 
     @GetMapping("view/{id}")
     public String task(@PathVariable long id, Model model) {
-        model.addAttribute("task", taskService.selectById(id));
+        TaskFullResponse task = taskService.selectById(id);
+        model.addAttribute("task", task);
+        model.addAttribute("availableWorkers", workerService.getAvailableWorkersByTask(task));
         return "task/view";
     }
 
@@ -63,4 +70,20 @@ public class TaskController {
         taskService.create(task);
         return "redirect:/task";
     }
+
+    @PostMapping("{taskId}/{workerId}")
+    public String addTaskToWorker(@PathVariable long taskId, @PathVariable long workerId, Model model) {
+        taskService.addTaskToWorker(taskId, workerId);
+        return "redirect:/task/view/" + taskId;
+    }
+
+    @DeleteMapping("{taskId}/{workerId}")
+    public String deleteTaskFromWorker(@PathVariable long taskId, @PathVariable long workerId, Model model) {
+        taskService.deleteTaskFromWorker(taskId, workerId);
+        return "redirect:/task/view/" + taskId;
+    }
+
+
+
+
 }

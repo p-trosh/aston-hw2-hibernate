@@ -6,6 +6,7 @@ import ru.trosh.astontrainee.domain.Speciality;
 import ru.trosh.astontrainee.domain.Worker;
 import ru.trosh.astontrainee.model.department.DepartmentShortResponse;
 import ru.trosh.astontrainee.model.speciality.SpecialityShortResponse;
+import ru.trosh.astontrainee.model.task.TaskShortResponse;
 import ru.trosh.astontrainee.model.worker.WorkerFullResponse;
 import ru.trosh.astontrainee.model.worker.WorkerRequest;
 import ru.trosh.astontrainee.model.worker.WorkerShortResponse;
@@ -35,6 +36,13 @@ public class WorkerMapperImpl implements WorkerMapper{
                 .department(new DepartmentShortResponse(
                         worker.getDepartment().getId(),
                         worker.getDepartment().getName()))
+                .tasks(worker.getTasks().stream()
+                        .map(task -> new TaskShortResponse(
+                                task.getId(),
+                                task.getTitle(),
+                                "",
+                                ""))
+                        .collect(Collectors.toList()))
                 .build();
     }
 

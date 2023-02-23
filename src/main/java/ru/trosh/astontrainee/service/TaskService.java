@@ -17,4 +17,8 @@ public interface TaskService {
     TaskFullResponse update(Long id, TaskRequest request);
 
     void delete(Long id);
+
+    void addTaskToWorker(Long taskId, Long workerId);
+
+    void deleteTaskFromWorker(Long taskId, Long workerId);
 }

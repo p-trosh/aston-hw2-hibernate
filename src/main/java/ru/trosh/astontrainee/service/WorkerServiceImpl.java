@@ -5,12 +5,15 @@ import org.springframework.stereotype.Service;
 import ru.trosh.astontrainee.dao.WorkerDAO;
 import ru.trosh.astontrainee.domain.Worker;
 import ru.trosh.astontrainee.mapper.WorkerMapper;
+import ru.trosh.astontrainee.model.task.TaskFullResponse;
 import ru.trosh.astontrainee.model.worker.WorkerFullResponse;
 import ru.trosh.astontrainee.model.worker.WorkerRequest;
 import ru.trosh.astontrainee.model.worker.WorkerShortResponse;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class WorkerServiceImpl implements WorkerService{
@@ -48,6 +51,14 @@ public class WorkerServiceImpl implements WorkerService{
     @Override
     public void delete(Long id) {
         workerDAO.delete(id);
+    }
+
+    @Override
+    public List<WorkerShortResponse> getAvailableWorkersByTask(TaskFullResponse task) {
+        return selectAll().stream()
+                .filter(w -> Objects.equals(w.getDepartmentName(), task.getDepartment().getName()))
+                .filter(w -> !(task.getWorkers().contains(w)))
+                .collect(Collectors.toList());
     }
 
     private Worker findOrThrow(Long id) {

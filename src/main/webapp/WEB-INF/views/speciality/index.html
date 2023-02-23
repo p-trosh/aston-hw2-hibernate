@@ -18,18 +18,11 @@
                 <th>Номер</th>
                 <th>Название</th>
                 <th></th>
-                <th></th>
             </tr>
             <tr th:each="record : ${specialities}">
                 <td th:text="${record.getId()}"></td>
                 <td th:text="${record.getName()}"></td>
-                <td><a th:href="@{/speciality/edit/{id}(id=${record.getId()})}">Редактировать</a></td>
-                <td><form th:action="@{/speciality/delete/{id}(id=${record.getId()})}" th:method="delete" >
-                    <input type="hidden" name="_method" value="delete" />
-                    <button type="submit" class="btn">
-                        Удалить
-                    </button>
-                </form></td>
+                <td><a th:href="@{/speciality/view/{id}(id=${record.getId()})}">Полная информация</a></td>
 
             </tr>
         </table>

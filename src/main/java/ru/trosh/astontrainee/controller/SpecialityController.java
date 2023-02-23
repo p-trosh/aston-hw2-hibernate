@@ -20,6 +20,12 @@ public class SpecialityController {
         return "speciality/index";
     }
 
+    @GetMapping("view/{id}")
+    public String viewSpeciality(@PathVariable long id, Model model) {
+        model.addAttribute("speciality", specialityService.selectById(id));
+        return "speciality/view";
+    }
+
     @DeleteMapping("delete/{id}")
     public String deleteSpeciality(@PathVariable long id) {
         specialityService.delete(id);
@@ -51,9 +57,4 @@ public class SpecialityController {
         specialityService.create(speciality);
         return "redirect:/speciality";
     }
-
-
-
-
-
 }

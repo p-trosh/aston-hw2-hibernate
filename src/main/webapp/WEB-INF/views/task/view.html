@@ -32,5 +32,59 @@
             </tr>
         </table>
     </div>
+
+    <div th:if="${availableWorkers.size() > 0}">
+        <div class="department">
+            <table>
+                <caption>Доступные работники</caption>
+                <tr>
+                    <th>Номер</th>
+                    <th>Имя</th>
+                    <th>Фамилия</th>
+                    <th></th>
+                </tr>
+                <tr th:each="record : ${availableWorkers}">
+                    <td th:text="${record.getId()}"></td>
+                    <td th:text="${record.getFirstName()}"></td>
+                    <td th:text="${record.getLastName()}"></td>
+                    <td>
+                        <form method="POST" th:action="@{/task/{taskId}/{workerId}(taskId=${task.getId()},workerId=${record.getId()})}">
+                            <button type="submit" name="submit" value="value" class="link-button">Назначить на задачу</button>
+                        </form>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div th:if="${task.getWorkers().size() > 0}">
+        <div class="department">
+            <table>
+                <caption>Назначенные работники</caption>
+                <tr>
+                    <th>Номер</th>
+                    <th>Имя</th>
+                    <th>Фамилия</th>
+                    <th>Подробная информация</th>
+                    <th></th>
+                </tr>
+                <tr th:each="record : ${task.getWorkers()}">
+                    <td th:text="${record.getId()}"></td>
+                    <td th:text="${record.getFirstName()}"></td>
+                    <td th:text="${record.getLastName()}"></td>
+                    <td><a th:href="@{/worker/view/{id}(id=${record.getId()})}">Полная информация</a></td>
+                    <td>
+                        <form th:action="@{/task/{taskId}/{workerId}(taskId=${task.getId()},workerId=${record.getId()})}"
+                              th:method="delete" >
+                        <input type="hidden" name="_method" value="delete" />
+                        <button type="submit" class="btn">
+                            Снять с задачи
+                        </button>
+                        </form>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
 </body>
 </html>

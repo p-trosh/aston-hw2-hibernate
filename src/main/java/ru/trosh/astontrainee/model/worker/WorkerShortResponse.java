@@ -67,6 +67,26 @@ public class WorkerShortResponse {
         this.departmentName = departmentName;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        WorkerShortResponse that = (WorkerShortResponse) o;
+
+        if (!id.equals(that.id)) return false;
+        if (!firstName.equals(that.firstName)) return false;
+        return lastName.equals(that.lastName);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id.hashCode();
+        result = 31 * result + firstName.hashCode();
+        result = 31 * result + lastName.hashCode();
+        return result;
+    }
+
     public static class WorkerBuilder {
         private Long id;
         private String firstName;
