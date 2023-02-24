@@ -45,7 +45,7 @@ public class TaskMapperImpl implements TaskMapper{
     public Task map(TaskRequest request) {
         return Task.builder()
                 .title(request.getTitle())
-                .description(request.getTitle())
+                .description(request.getDescription())
                 .department(Department.builder()
                         .id(request.getDepartmentId())
                         .build())
