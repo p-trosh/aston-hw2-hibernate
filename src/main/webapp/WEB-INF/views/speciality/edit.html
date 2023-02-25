@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Редактирование специальности</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body>
+<div th:if="${speciality == null}">
+    <form method="post">
+
+        <label>Название</label>
+        <input type="text" name="name" required="required"><br>
+        <p>
+            <button type="submit" class="btn">Создать запись</button>
+        </p>
+    </form>
+</div>
+<div th:if="${speciality != null}">
+    <form th:action="@{/speciality/edit/{id}(id=${speciality.getId()})}" th:method="put">
+        <input type="hidden" name="_method" value="put" />
+        <label>Название</label>
+        <input type="text" name="name" required="required" th:value="${speciality.getName()}"><br>
+        <p>
+            <button type="submit" class="btn">Создать запись</button>
+        </p>
+    </form>
+</div>
+</body>
+</html>

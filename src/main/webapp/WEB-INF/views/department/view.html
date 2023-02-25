@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Подробная информация об отделе</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body>
+    <div th:replace="index :: navBar"></div>
+    <div class="department">
+        <table>
+            <tr>
+                <th>Номер</th>
+                <th>Имя</th>
+                <th></th>
+                <th></th>
+            </tr>
+            <tr>
+                <td th:text="${department.getId()}"></td>
+                <td th:text="${department.getName()}"></td>
+                <td><a th:href="@{/department/edit/{id}(id=${department.getId()})}">Редактировать</a></td>
+                <td><form th:action="@{/department/delete/{id}(id=${department.getId()})}" th:method="delete" >
+                    <input type="hidden" name="_method" value="delete" />
+                    <button type="submit" class="btn">
+                        Удалить
+                    </button>
+                </form></td>
+            </tr>
+        </table>
+    </div>
+
+    <div th:if="${department.getWorkers().size() > 0}">
+        <div class="department">
+            <table>
+                <caption>Работники</caption>
+                <tr>
+                    <th>Номер</th>
+                    <th>Имя</th>
+                    <th>Фамилия</th>
+                    <th>Подробная информация</th>
+                </tr>
+                <tr th:each="record : ${department.getWorkers()}">
+                    <td th:text="${record.getId()}"></td>
+                    <td th:text="${record.getFirstName()}"></td>
+                    <td th:text="${record.getLastName()}"></td>
+                    <td><a th:href="@{/worker/view/{id}(id=${record.getId()})}">Полная информация</a></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div th:if="${department.getTasks().size() > 0}">
+        <div class="department">
+            <table>
+                <caption>Задания</caption>
+                <tr>
+                    <th>Номер</th>
+                    <th>Название</th>
+                    <th>Описание</th>
+                    <th>Подробная информация</th>
+                </tr>
+                <tr th:each="record : ${department.getTasks()}">
+                    <td th:text="${record.getId()}"></td>
+                    <td th:text="${record.getTitle()}"></td>
+                    <td th:text="${record.getDescription()}"></td>
+                    <td><a th:href="@{/task/view/{id}(id=${record.getId()})}">Полная информация</a></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</body>
+</html>
