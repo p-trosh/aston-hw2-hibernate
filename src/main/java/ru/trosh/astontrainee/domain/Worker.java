@@ -1,15 +1,40 @@
 package ru.trosh.astontrainee.domain;
 
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Entity
+@Table(name = "worker")
 public class Worker {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(name = "first_name")
     private String firstName;
+
+    @Column(name = "last_name")
     private String lastName;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "department")
     private Department department;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "speciality")
     private Speciality speciality;
+
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy="workers")
     private List<Task> tasks = new ArrayList<>();
+
+    @PrePersist
+    public void prePersist() {
+        if(tasks == null) {
+            tasks = new ArrayList<>();
+        }
+    }
 
     public static Worker.WorkerBuilder builder() {
         return new Worker.WorkerBuilder();

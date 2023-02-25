@@ -1,167 +1,95 @@
 package ru.trosh.astontrainee.dao;
 
-import org.springframework.stereotype.Component;
-import ru.trosh.astontrainee.config.JDBCConnectionManager;
-import ru.trosh.astontrainee.domain.Department;
-import ru.trosh.astontrainee.domain.Speciality;
+import org.hibernate.Session;
+import org.springframework.stereotype.Repository;
+import ru.trosh.astontrainee.config.HibernateUtil;
 import ru.trosh.astontrainee.domain.Task;
 import ru.trosh.astontrainee.domain.Worker;
 
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
-@Component
+@Repository
 public class TaskDAOImpl implements TaskDAO{
-    private static final String CREATE_TASK =
-            "INSERT INTO task (title, description, department) VALUES ( ? , ? , ? );";
-    private static final String SELECT_TASK =
-            "SELECT" +
-            " task.id, title, description, department.id as d_id, department.name as d_name, worker.id as w_id, " +
-            " worker.first_name as w_first_name, worker.last_name as w_last_name " +
-            " FROM task" +
-            " LEFT JOIN department ON department.id = task.department" +
-            " LEFT JOIN worker_task ON worker_task.task_id = task.id" +
-            " LEFT JOIN worker ON worker.id = worker_task.worker_id" +
-            " WHERE task.id = ? ;";
-    private static final String UPDATE_TASK =
-            "UPDATE task SET title = ?, description = ?, department = ? WHERE id = ? ;";
-    private static final String DELETE_TASK = "DELETE FROM task WHERE id = ? ;";
-    private static final String SELECT_ALL_TASKS =
-            "SELECT task.id, title, description, department.id as d_id, department.name as d_name" +
-                    " FROM task" +
-            " LEFT JOIN department ON department.id = task.department;";
-    private static final String ADD_TASK_FROM_WORKER = "" +
-            "INSERT INTO worker_task (task_id, worker_id) VALUES ( ? , ? );";
-    private static final String DELETE_TASK_FROM_WORKER =
-            "DELETE FROM worker_task WHERE task_id = ? AND worker_id = ? ;";
+
+    public Session openSession() {
+        return HibernateUtil.getSessionFactory().openSession();
+    }
 
     @Override
-    public Task create(Task task) {
-        Long createdId = execute(CREATE_TASK, task.getTitle(), task.getDescription(), task.getDepartment().getId());
-        return selectById(createdId);
+    public Task create(Task entity) {
+        try (Session session = openSession()) {
+            session.beginTransaction();
+            session.persist(entity);
+            session.getTransaction().commit();
+            return entity;
+        }
     }
 
     @Override
     public Task selectById(Long id) {
-        try (Connection connection = JDBCConnectionManager.getConnection();
-             PreparedStatement statement = connection.prepareStatement(SELECT_TASK)) {
-            statement.setObject(1, id);
-            try (ResultSet resultSet = statement.executeQuery()) {
-                return mapFullTask(resultSet);
-            }
-        } catch (SQLException e) {
-            throw new IllegalStateException(e);
+        try (Session session = openSession()) {
+            session.beginTransaction();
+            Task task = session.load(Task.class, id);
+            task.getWorkers().size();
+            session.getTransaction().commit();
+            return task;
         }
     }
 
     @Override
     public List<Task> selectAll() {
-        try (Connection connection = JDBCConnectionManager.getConnection();
-             PreparedStatement statement = connection.prepareStatement(SELECT_ALL_TASKS)) {
-            try (ResultSet resultSet = statement.executeQuery()) {
-                List<Task> result = new ArrayList<>();
-                while (resultSet.next()) {
-                    result.add(mapShortTask(resultSet));
-                }
-                return result;
-            }
-        } catch (SQLException e) {
-            throw new IllegalStateException(e);
+        try (Session session = openSession()) {
+            return session.createQuery("SELECT t FROM Task t", Task.class).getResultList();
         }
     }
 
     @Override
-    public Task update(Task task) {
-        Long updatedId = execute(
-                UPDATE_TASK,
-                task.getTitle(),
-                task.getDescription(),
-                task.getDepartment().getId(),
-                task.getId());
-        return selectById(updatedId);
+    public Task update(Task entity) {
+        try (Session session = openSession()) {
+            session.beginTransaction();
+            Task task = session.load(Task.class, entity.getId());
+            task.setTitle(entity.getTitle());
+            task.setDescription(entity.getDescription());
+            task.setDepartment(entity.getDepartment());
+            task.getWorkers().size();
+            session.update(task);
+            session.getTransaction().commit();
+            return task;
+        }
     }
 
     @Override
     public void delete(Long id) {
-        execute(DELETE_TASK, id);
-
+        try (Session session = openSession()) {
+            session.beginTransaction();
+            Task task = new Task();
+            task.setId(id);
+            session.delete(task);
+            session.getTransaction().commit();
+        }
     }
 
     @Override
     public void addTaskToWorker(Long taskId, Long workerId) {
-        execute(ADD_TASK_FROM_WORKER, taskId, workerId);
+        try (Session session = openSession()) {
+            session.beginTransaction();
+            Task task = session.load(Task.class, taskId);
+            Worker worker = session.load(Worker.class, workerId);
+            task.getWorkers().add(worker);
+            session.update(task);
+            session.getTransaction().commit();
+        }
     }
 
     @Override
     public void deleteTaskFromWorker(Long taskId, Long workerId) {
-        execute(DELETE_TASK_FROM_WORKER, taskId, workerId);
-    }
-
-    private Long execute(final String sql, final Object... values) {
-        long id = 0;
-        try (Connection connection = JDBCConnectionManager.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            for (int i = 0; i < values.length; i++) {
-                statement.setObject(i + 1, values[i]);
-            }
-            int affectedRows = statement.executeUpdate();
-            if (affectedRows == 0) {
-                throw new SQLException("No rows affected.");
-            }
-            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
-                if (generatedKeys.next()) {
-                    id = generatedKeys.getLong(1);
-                } else {
-                    throw new SQLException("No ID obtained.");
-                }
-            }
-            return id;
-        } catch (SQLException e) {
-            throw new IllegalStateException(e);
+        try (Session session = openSession()) {
+            session.beginTransaction();
+            Task task = session.get(Task.class, taskId);
+            Worker worker = session.get(Worker.class, workerId);
+            task.getWorkers().remove(worker);
+            session.update(task);
+            session.getTransaction().commit();
         }
-    }
-
-    private Task mapShortTask(final ResultSet resultSet) throws SQLException {
-        return Task.builder()
-                .id(resultSet.getLong("id"))
-                .title(resultSet.getString("title"))
-                .description(resultSet.getString("description"))
-                .department(Department.builder()
-                        .id(resultSet.getLong("d_id"))
-                        .name(resultSet.getString("d_name"))
-                        .build())
-                .build();
-    }
-
-    private Task mapFullTask(final ResultSet resultSet) throws SQLException {
-        Task task = null;
-        if (resultSet.next()) {
-            Set<Worker> workerSet = new HashSet<>();
-            task = Task.builder()
-                    .id(resultSet.getLong("id"))
-                    .title(resultSet.getString("title"))
-                    .description(resultSet.getString("description"))
-                    .department(Department.builder()
-                            .id(resultSet.getLong("d_id"))
-                            .name(resultSet.getString("d_name"))
-                            .build())
-                    .build();
-            do {
-                if (resultSet.getLong("w_id") != 0) {
-                    workerSet.add(Worker.builder()
-                            .id(resultSet.getLong("w_id"))
-                            .firstName(resultSet.getString("w_first_name"))
-                            .lastName(resultSet.getString("w_last_name"))
-                            .speciality(new Speciality())
-                            .department(new Department())
-                            .build());
-                }
-            } while (resultSet.next());
-            task.setWorkers(new ArrayList<>(workerSet));
-        }
-        return task;
     }
 }

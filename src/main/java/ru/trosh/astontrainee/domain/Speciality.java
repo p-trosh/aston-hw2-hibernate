@@ -1,12 +1,32 @@
 package ru.trosh.astontrainee.domain;
 
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Entity
+@Table(name = "speciality")
 public class Speciality {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String name;
+
+    @OneToMany(
+            mappedBy = "speciality",
+            cascade = CascadeType.ALL,
+            fetch = FetchType.EAGER
+    )
     private List<Worker> workers = new ArrayList<>();
+
+    @PrePersist
+    public void prePersist() {
+        if(workers == null) {
+            workers = new ArrayList<>();
+        }
+    }
 
     public Speciality() {
     }

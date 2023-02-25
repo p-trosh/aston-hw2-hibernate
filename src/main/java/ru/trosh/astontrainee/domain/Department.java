@@ -1,13 +1,43 @@
 package ru.trosh.astontrainee.domain;
 
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Entity
+@Table(name = "department")
 public class Department {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String name;
+
+    @OneToMany(
+            mappedBy = "department",
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY
+    )
     private List<Worker> workers = new ArrayList<>();
+
+    @OneToMany(
+            mappedBy = "department",
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY
+    )
     private List<Task> tasks = new ArrayList<>();
+
+    @PrePersist
+    public void prePersist() {
+        if(workers == null) {
+            workers = new ArrayList<>();
+        }
+        if(tasks == null) {
+            tasks = new ArrayList<>();
+        }
+    }
+
 
     public static Department.DepartmentBuilder builder() {
         return new Department.DepartmentBuilder();

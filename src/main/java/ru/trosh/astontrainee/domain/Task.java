@@ -1,14 +1,38 @@
 package ru.trosh.astontrainee.domain;
 
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Entity
+@Table(name = "task")
 public class Task {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String title;
+
     private String description;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "department")
     private Department department;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "worker_task",
+            joinColumns = @JoinColumn(name = "task_id"),
+            inverseJoinColumns = @JoinColumn(name = "worker_id"))
     private List<Worker> workers = new ArrayList<>();
+
+    @PrePersist
+    public void prePersist() {
+        if(workers == null) {
+            workers = new ArrayList<>();
+        }
+    }
 
     public static Task.TaskBuilder builder() {
         return new Task.TaskBuilder();
