@@ -1,0 +1,25 @@
+
+    body {
+        font-size: 20px;
+    }
+
+    .navBar {
+        width: 800px;
+        margin: auto;
+        text-align: center;
+        background-color: #f2f2f2
+    }
+
+    .department {
+            width: 800px;
+            margin: auto;
+            text-align: center;
+        }
+
+    .link {
+        float: left;
+        line-height: 30px;
+        width: 150px;
+        margin-right: 10px;
+        text-align: center;
+    }
